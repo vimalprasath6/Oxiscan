@@ -590,7 +590,4 @@ function OxidativeStressForm({ onSubmit }) {
   );
 }
 
-
-
-
 export default OxidativeStressForm;

@@ -1,15 +1,15 @@
 import React, { useState } from 'react';
-import { 
-  Heart, 
-  Droplet, 
-  Scale, 
-  UserCircle, 
-  Cigarette, 
-  Wine, 
-  Activity as ActivityIcon, 
-  Utensils, 
-  Moon, 
-  Brain, 
+import {
+  Heart,
+  Droplet,
+  Scale,
+  UserCircle,
+  Cigarette,
+  Wine,
+  Activity as ActivityIcon,
+  Utensils,
+  Moon,
+  Brain,
   Stethoscope,
   FlaskConical,
   Pill,
@@ -18,6 +18,11 @@ import {
 
 function OxidativeStressForm({ onSubmit }) {
   const [formData, setFormData] = useState({
+    // Newly added fields
+    name: '',
+    mobileNumber: '',
+    dob: '', // Date of Birth
+
     systolic: '',
     diastolic: '',
     bloodSugar: '',
@@ -33,8 +38,8 @@ function OxidativeStressForm({ onSubmit }) {
     sleepHours: '',
     stressLevel: '3',
     chronicDiseases: [],
-    
-    // New lab parameters
+
+    // Lab parameters
     urea: '',
     creatine: '',
     sodium: '',
@@ -52,18 +57,18 @@ function OxidativeStressForm({ onSubmit }) {
     const { name, value } = e.target;
     setFormData(prev => {
       const newData = { ...prev, [name]: value };
-      
+
       if (name === 'height' || name === 'weight') {
         const height = name === 'height' ? parseFloat(value) : parseFloat(prev.height);
         const weight = name === 'weight' ? parseFloat(value) : parseFloat(prev.weight);
-        
+
         if (height && weight) {
           const heightInMeters = height / 100;
           const calculatedBMI = (weight / (heightInMeters * heightInMeters)).toFixed(1);
           newData.bmi = calculatedBMI;
         }
       }
-      
+
       return newData;
     });
   };
@@ -72,13 +77,13 @@ function OxidativeStressForm({ onSubmit }) {
     setFormData(prev => {
       const diseases = [...prev.chronicDiseases];
       const index = diseases.indexOf(disease);
-      
+
       if (index === -1) {
         diseases.push(disease);
       } else {
         diseases.splice(index, 1);
       }
-      
+
       return { ...prev, chronicDiseases: diseases };
     });
   };
@@ -105,7 +110,7 @@ function OxidativeStressForm({ onSubmit }) {
           Please provide your health information to evaluate oxidative stress levels
         </p>
       </div>
-      
+
       <form onSubmit={handleSubmit}>
         {/* Form Sections */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -115,6 +120,45 @@ function OxidativeStressForm({ onSubmit }) {
             <div className="flex items-center mb-4 text-black">
               <UserCircle className="mr-2 text-purple-700" size={20} />
               <h3 className="font-bold">Demographics</h3>
+            </div>
+            {/* New: Name Input */}
+            <div className="mb-4">
+              <label className="block text-sm text-black mb-1">Name</label>
+              <input
+                type="text"
+                name="name"
+                value={formData.name}
+                onChange={handleChange}
+                className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-purple-500 focus:border-purple-500 text-black"
+                placeholder="John Doe"
+                required
+              />
+            </div>
+            {/* New: Mobile Number Input */}
+            <div className="mb-4">
+              <label className="block text-sm text-black mb-1">Mobile Number</label>
+              <input
+                type="tel" // Use type="tel" for telephone numbers
+                name="mobileNumber"
+                value={formData.mobileNumber}
+                onChange={handleChange}
+                className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-purple-500 focus:border-purple-500 text-black"
+                placeholder="9876543210"
+                pattern="[0-9]{10}" // Simple pattern for 10 digits
+                required
+              />
+            </div>
+            {/* New: Date of Birth Input */}
+            <div className="mb-4">
+              <label className="block text-sm text-black mb-1">Date of Birth</label>
+              <input
+                type="date"
+                name="dob"
+                value={formData.dob}
+                onChange={handleChange}
+                className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-purple-500 focus:border-purple-500 text-black"
+                required
+              />
             </div>
             <div className="mb-4">
               <label className="block text-sm text-black mb-1">Age</label>
@@ -128,7 +172,7 @@ function OxidativeStressForm({ onSubmit }) {
                 required
               />
             </div>
-            
+
             {/* Gender selection */}
             <div>
               <label className="block text-sm text-black mb-1">Gender</label>
@@ -253,7 +297,7 @@ function OxidativeStressForm({ onSubmit }) {
         {/* Laboratory Parameters */}
         <div className="mt-8">
           <h3 className="text-lg font-bold text-black mb-4">Laboratory Parameters</h3>
-          
+
           {/* Kidney Function Tests */}
           <div className="bg-yellow-50 rounded-lg p-4 mb-6">
             <div className="flex items-center mb-4 text-black">
@@ -309,7 +353,7 @@ function OxidativeStressForm({ onSubmit }) {
               </div>
             </div>
           </div>
-          
+
           {/* Liver Function Tests */}
           <div className="bg-amber-50 rounded-lg p-4">
             <div className="flex items-center mb-4 text-black">
@@ -358,7 +402,7 @@ function OxidativeStressForm({ onSubmit }) {
                 />
               </div>
             </div>
-            
+
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div>
                 <label className="block text-sm text-black mb-1">
@@ -401,7 +445,7 @@ function OxidativeStressForm({ onSubmit }) {
                 />
               </div>
             </div>
-            
+
             <div className="mt-4">
               <label className="block text-sm text-black mb-1">Albumin (g/dL)</label>
               <input
@@ -576,7 +620,7 @@ function OxidativeStressForm({ onSubmit }) {
           </div>
         </div>
 
-        {/* Submit Button */}
+        
         <div className="mt-8 text-center">
           <button
             type="submit"

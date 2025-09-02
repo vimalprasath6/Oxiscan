@@ -4,6 +4,7 @@ import Footer from './components/Footer';
 import OxidativeStressForm from './components/OxidativeStressForm';
 import ResultsPanel from './components/ResultsPanel';
 import Home from './components/Home';
+import AboutUs from './components/AboutUs';
 // import LiverHealthAnalyzer from './components/LiverHealthAnalyzer'; // No longer directly used as a component to render
 import axios from 'axios';
 import { calculateCalories } from '../../server/routes/calorieCalculator'; // Assuming this utility is available client-side for the purpose of this integration
@@ -411,12 +412,17 @@ function App() {
     });
   };
 
+  const navigateToAbout = () => {
+    setCurrentPage('about');
+  };
+
   return (
     <div className="min-h-screen flex flex-col bg-white">
-      <Header onHomeClick={navigateToHome} />
+      <Header onHomeClick={navigateToHome} onAboutClick={navigateToAbout} />
 
-      <main className="flex-grow container mx-auto px-4 py-8 max-w-4xl bg-white">
+      <main className="flex-grow px-50 py-8 pt-50 w-full bg-white">
         {currentPage === 'home' && <Home onGetStarted={handleGetStarted} />}
+        {currentPage === 'about' && <AboutUs />}
         {currentPage === 'form' && (
           <div className="bg-white rounded-lg shadow-sm p-6">
             <OxidativeStressForm onSubmit={handleSubmit} />

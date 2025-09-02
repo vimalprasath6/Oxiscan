@@ -420,16 +420,26 @@ function App() {
     <div className="min-h-screen flex flex-col bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
       <Header onHomeClick={navigateToHome} onAboutClick={navigateToAbout} />
 
-      <main className="flex-grow px-3 sm:px-6 lg:px-8 py-4 sm:py-6 lg:py-8 pt-20 sm:pt-24 w-full max-w-7xl mx-auto">
-        {currentPage === 'home' && <Home onGetStarted={handleGetStarted} />}
-        {currentPage === 'about' && <AboutUs />}
+      <main className="flex-grow px-3 sm:px-6 lg:px-12 xl:px-16 py-4 sm:py-6 lg:py-8 pt-20 sm:pt-24 w-full">
+        {currentPage === 'home' && (
+          <div className="max-w-6xl mx-auto">
+            <Home onGetStarted={handleGetStarted} />
+          </div>
+        )}
+        {currentPage === 'about' && (
+          <div className="max-w-5xl mx-auto">
+            <AboutUs />
+          </div>
+        )}
         {currentPage === 'form' && (
-          <div className="bg-white/70 backdrop-blur-sm rounded-xl sm:rounded-2xl shadow-lg border border-white/20 p-4 sm:p-6 lg:p-8 mx-auto max-w-4xl">
-            <OxidativeStressForm onSubmit={handleSubmit} />
+          <div className="max-w-4xl mx-auto">
+            <div className="bg-white/70 backdrop-blur-sm rounded-xl sm:rounded-2xl shadow-lg border border-white/20 p-4 sm:p-6 lg:p-8">
+              <OxidativeStressForm onSubmit={handleSubmit} />
+            </div>
           </div>
         )}
         {currentPage === 'results' && assessmentData.results && (
-          <div className="max-w-7xl mx-auto">
+          <div className="w-full">
             <ResultsPanel 
               results={assessmentData.results} // Oxidative Stress
               bmiData={assessmentData.bmiData}

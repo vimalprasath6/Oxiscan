@@ -417,25 +417,27 @@ function App() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-white">
+    <div className="min-h-screen flex flex-col bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
       <Header onHomeClick={navigateToHome} onAboutClick={navigateToAbout} />
 
-      <main className="flex-grow px-50 py-8 pt-50 w-full bg-white">
+      <main className="flex-grow px-3 sm:px-6 lg:px-8 py-4 sm:py-6 lg:py-8 pt-20 sm:pt-24 w-full max-w-7xl mx-auto">
         {currentPage === 'home' && <Home onGetStarted={handleGetStarted} />}
         {currentPage === 'about' && <AboutUs />}
         {currentPage === 'form' && (
-          <div className="bg-white rounded-lg shadow-sm p-6">
+          <div className="bg-white/70 backdrop-blur-sm rounded-xl sm:rounded-2xl shadow-lg border border-white/20 p-4 sm:p-6 lg:p-8 mx-auto max-w-4xl">
             <OxidativeStressForm onSubmit={handleSubmit} />
           </div>
         )}
         {currentPage === 'results' && assessmentData.results && (
-          <ResultsPanel 
-            results={assessmentData.results} // Oxidative Stress
-            bmiData={assessmentData.bmiData}
-            calorieData={assessmentData.calorieData}
-            liverHealthData={assessmentData.liverHealthData} // Pass liver health data
-            onReset={handleReset}
-          />
+          <div className="max-w-7xl mx-auto">
+            <ResultsPanel 
+              results={assessmentData.results} // Oxidative Stress
+              bmiData={assessmentData.bmiData}
+              calorieData={assessmentData.calorieData}
+              liverHealthData={assessmentData.liverHealthData} // Pass liver health data
+              onReset={handleReset}
+            />
+          </div>
         )}
       </main>
 

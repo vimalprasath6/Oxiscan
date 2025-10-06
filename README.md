@@ -1,5 +1,7 @@
 OxiScan AI Health Dashboard
 
+LIVE PAGE@[OxiScan Live](https://oxiscanplatform.vercel.app)
+
 OxiScan is a web-based AI-powered health analytics platform. It allows users to input their basic lifestyle and dietary information along with routine blood parameters, and the system provides insights into oxidative stress risk, inflammation levels, liver health, and sleep health.
 
 This repository contains the **frontend client** built using **React**, **Vite**, and **TailwindCSS**. The project is designed to be fast, responsive, and deployable on platforms like **Vercel**.

@@ -29,7 +29,7 @@ function Header({ onHomeClick, onAboutClick, onGetStarted }) {
   };
 
   return (
-    <header className="fixed top-0 left-0 w-full z-50 bg-white/80 backdrop-blur-lg shadow-lg">
+    <header className="fixed top-0 left-0 w-full z-50 bg-white/10 backdrop-blur-lg shadow-lg">
       <div className="container mx-auto px-4 py-4 md:py-6 flex items-center justify-between">
         
         {/* Logo and Tagline */}
@@ -145,3 +145,4 @@ function Header({ onHomeClick, onAboutClick, onGetStarted }) {
 }
 
 export default Header;
+

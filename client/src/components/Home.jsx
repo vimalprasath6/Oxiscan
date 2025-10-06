@@ -3,32 +3,30 @@ import { Activity, Heart, Scale, Brain, Shield, FlaskConical } from 'lucide-reac
 
 const Home = ({ onGetStarted }) => {
   return (
-    <div className="bg-white min-h-screen">
+    <div className="bg-white min-h-screen w-full">
       {/* Hero Section */}
-      <section className="bg-gradient-to-r from-blue-600 to-blue-800 text-white py-20">
-        <div className="container mx-auto px-4">
-          <div className="max-w-3xl mx-auto text-center">
-            <h1 className="text-4xl md:text-5xl font-bold mb-6">
-              Oxidative Stress Prediction Platform
-            </h1>
-            <p className="text-xl mb-8">
-              Understand your oxidative stress levels and receive personalized recommendations
-              for a healthier lifestyle.
-            </p>
-            <button 
-                onClick={onGetStarted}
-                className="bg-white text-blue-600 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors"
-                style={{ backgroundColor: 'white', color: '#2563EB' }}>Get Started
-            </button>
-          </div>
+      <section className="bg-gradient-to-r from-blue-600 to-blue-800 text-white py-20 w-full">
+        <div className="text-center px-4">
+          <h1 className="text-4xl md:text-5xl font-bold mb-6">
+            Oxidative Stress Prediction Platform
+          </h1>
+          <p className="text-xl mb-8">
+            Understand your oxidative stress levels and receive personalized recommendations
+            for a healthier lifestyle.
+          </p>
+          <button 
+              onClick={onGetStarted}
+              className="bg-white text-blue-600 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors"
+              style={{ backgroundColor: 'white', color: '#2563EB' }}>Get Started
+          </button>
         </div>
       </section>
 
       {/* Features Section */}
-      <section className="py-20">
-        <div className="container mx-auto px-4">
+      <section className="py-20 w-full">
+        <div className="px-4">
           <h2 className="text-3xl font-bold text-center mb-12">What You'll Discover</h2>
-          <div className="grid md:grid-cols-3 gap-8">
+          <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
             <div className="text-center p-6">
               <div className="bg-blue-100 rounded-full p-4 inline-block mb-4">
                 <FlaskConical size={32} className="text-blue-600" />
@@ -55,8 +53,8 @@ const Home = ({ onGetStarted }) => {
       </section>
 
       {/* How It Works Section */}
-      <section className="bg-gray-50 py-20">
-        <div className="container mx-auto px-4">
+      <section className="bg-gray-50 py-20 w-screen">
+        <div className="px-4">
           <h2 className="text-3xl font-bold text-center mb-12">How It Works</h2>
           <div className="max-w-4xl mx-auto">
             <div className="flex flex-col md:flex-row md:space-x-12">
@@ -89,10 +87,10 @@ const Home = ({ onGetStarted }) => {
       </section>
 
       {/* Why Oxidative Stress Matters Section */}
-      <section className="py-20">
-        <div className="container mx-auto px-4">
+      <section className="py-20 w-full">
+        <div className="px-4">
           <h2 className="text-3xl font-bold text-center mb-12">Why Oxidative Stress Matters</h2>
-          <div className="max-w-3xl mx-auto">
+          <div className="max-w-5xl mx-auto">
             <div className="grid md:grid-cols-2 gap-8">
               <div className="bg-white p-6 rounded-lg shadow-sm">
                 <div className="flex items-center mb-4">
@@ -128,19 +126,17 @@ const Home = ({ onGetStarted }) => {
       </section>
 
       {/* Call to Action Section */}
-      <section className="bg-blue-600 text-white py-16">
-        <div className="container mx-auto px-4">
-          <div className="max-w-3xl mx-auto text-center">
-            <h2 className="text-3xl font-bold mb-6">Ready to Take Control of Your Health?</h2>
-            <p className="text-xl mb-8">Start your journey to better health by understanding your oxidative stress levels today.</p>
-            <button 
-              onClick={onGetStarted}
-              className="bg-white text-blue-600 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors"
-              style={{ backgroundColor: 'white', color: '#2563EB' }}            
-              >
-              Begin Assessment
-            </button>
-          </div>
+      <section className="bg-blue-600 text-white py-16 w-full">
+        <div className="max-w-3xl mx-auto text-center px-4">
+          <h2 className="text-3xl font-bold mb-6">Ready to Take Control of Your Health?</h2>
+          <p className="text-xl mb-8">Start your journey to better health by understanding your oxidative stress levels today.</p>
+          <button 
+            onClick={onGetStarted}
+            className="bg-white text-blue-600 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors"
+            style={{ backgroundColor: 'white', color: '#2563EB' }}            
+            >
+            Begin Assessment
+          </button>
         </div>
       </section>
     </div>
@@ -148,4 +144,3 @@ const Home = ({ onGetStarted }) => {
 };
 
 export default Home;
-  

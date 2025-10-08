@@ -33,5 +33,4 @@ Tech Stack
 - **Lucide React** – Icons library  
 - **ESLint** – Code linting
 
-## Project Structure
 

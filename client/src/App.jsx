@@ -7,11 +7,9 @@ import Home from './components/Home';
 import AboutUs from './components/AboutUs';
 // import LiverHealthAnalyzer from './components/LiverHealthAnalyzer'; // No longer directly used as a component to render
 import axios from 'axios';
-import { calculateCalories } from '../../server/routes/calorieCalculator'; // Assuming this utility is available client-side for the purpose of this integration
+import { calculateCalories } from '../../server/routes/calorieCalculator'; // Assuming this utility is available client-side
 
-// --- Utility functions for calculations (extracted from App.jsx and LiverHealthAnalyzer.jsx) ---
-
-// BMI Calculation (from original App.jsx)
+// --- Utility functions for calculations (unchanged) ---
 const calculateBMICategory = (bmiValue) => {
   if (bmiValue < 18.5) return { category: 'Underweight', color: 'text-blue-600' };
   if (bmiValue < 25) return { category: 'Normal Weight', color: 'text-green-600' };
@@ -21,7 +19,6 @@ const calculateBMICategory = (bmiValue) => {
   return { category: 'Obesity Class III', color: 'text-red-600' };
 };
 
-// Oxidative Stress Score Calculation (from original App.jsx)
 const calculateOxidativeStressScore = (data, bmiValue) => {
   let score = 0;
   const systolic = parseInt(data.systolic);
@@ -61,7 +58,6 @@ const calculateOxidativeStressScore = (data, bmiValue) => {
   return Math.min(100, score); // Cap score at 100
 };
 
-// Oxidative Stress Level (from original App.jsx)
 const getOxidativeStressLevel = (score) => {
   if (score >= 70) return { category: 'Severe', color: 'text-red-600' };
   if (score >= 40) return { category: 'High', color: 'text-orange-600' };
@@ -69,7 +65,6 @@ const getOxidativeStressLevel = (score) => {
   return { category: 'Low', color: 'text-green-600' };
 };
 
-// Oxidative Stress Recommendations (from original App.jsx)
 const generateOxidativeStressRecommendations = (data, bmiValue, systolic, diastolic, bloodSugar, sleepHours, stressLevel, calorieData) => {
   const recommendations = [];
 
@@ -84,10 +79,9 @@ const generateOxidativeStressRecommendations = (data, bmiValue, systolic, diasto
   if (stressLevel >= 4) recommendations.push("Incorporate stress management techniques such as meditation, yoga, or deep breathing exercises.");
 
   if (bmiValue > 25 && calorieData?.calorieTargets?.moderateLoss?.calories) {
-    recommendations.push(For sustainable weight loss, consider a daily calorie target of approximately ${calorieData.calorieTargets.moderateLoss.calories} kcal.);
+    recommendations.push(`For sustainable weight loss, consider a daily calorie target of approximately ${calorieData.calorieTargets.moderateLoss.calories} kcal.`);
   }
 
-  // Ensure a minimum number of recommendations for low stress levels if not enough specific ones
   if (recommendations.length < 3) {
     recommendations.push("Stay well-hydrated by drinking at least 8 glasses of water daily.");
     recommendations.push("Include a wide variety of colorful fruits and vegetables in your diet for diverse antioxidants.");
@@ -97,8 +91,8 @@ const generateOxidativeStressRecommendations = (data, bmiValue, systolic, diasto
   return recommendations;
 };
 
-// --- Liver Health Calculation Logic (extracted from LiverHealthAnalyzer.jsx) ---
-const liverReferenceRanges = { // Renamed to avoid conflict
+// --- Liver Health Calculation Logic ---
+const liverReferenceRanges = {
     tBilirubin: { min: 0.2, max: 1.2, unit: 'mg/dL' },
     sgot: { min: 10, max: 40, unit: 'U/L' },
     sgpt: { min: 7, max: 56, unit: 'U/L' },
@@ -108,7 +102,7 @@ const liverReferenceRanges = { // Renamed to avoid conflict
     albumin: { min: 3.5, max: 5.0, unit: 'g/dL' }
 };
 
-const getLiverParameterStatus = (value, range) => { // Renamed
+const getLiverParameterStatus = (value, range) => {
     if (!value || value === '') return { status: 'not-provided', level: 'Unknown' };
     const numValue = parseFloat(value);
     if (numValue < range.min) return { status: 'low', level: 'Low' };
@@ -116,14 +110,14 @@ const getLiverParameterStatus = (value, range) => { // Renamed
     return { status: 'normal', level: 'Normal' };
 };
 
-const calculateLiverHealthScore = (formData) => { // Passed formData explicitly
+const calculateLiverHealthScore = (formData) => {
     let score = 100;
     const parameters = ['tBilirubin', 'sgot', 'sgpt', 'alp', 'ggt', 'tProtein', 'albumin'];
 
     parameters.forEach(param => {
         const value = formData[param];
         if (value && value !== '') {
-            const status = getLiverParameterStatus(value, liverReferenceRanges[param]); // Using liverReferenceRanges
+            const status = getLiverParameterStatus(value, liverReferenceRanges[param]);
             if (status.status === 'high') {
                 if (param === 'sgot' || param === 'sgpt') {
                     const numValue = parseFloat(value);
@@ -140,7 +134,7 @@ const calculateLiverHealthScore = (formData) => { // Passed formData explicitly
                 }
             } else if (status.status === 'low') {
                 if (param === 'albumin' || param === 'tProtein') {
-                    score -= 15; // Low protein/albumin is concerning
+                    score -= 15;
                 } else {
                     score -= 5;
                 }
@@ -148,18 +142,14 @@ const calculateLiverHealthScore = (formData) => { // Passed formData explicitly
         }
     });
 
-    // Additional factors affecting liver health
     if (formData.alcoholConsumption === 'high') score -= 15;
     else if (formData.alcoholConsumption === 'moderate') score -= 8;
-    
     if (formData.smoking === 'yes') score -= 10;
-    
     if (formData.chronicDiseases?.includes('Diabetes')) score -= 10;
     if (formData.chronicDiseases?.includes('Hypertension')) score -= 5;
-    
     if (formData.dietType === 'unhealthy') score -= 10;
     if (formData.physicalActivity === 'low') score -= 8;
-    
+
     const currentBmi = parseFloat(formData.bmi);
     if (currentBmi >= 30) score -= 12;
     else if (currentBmi >= 25) score -= 6;
@@ -181,7 +171,7 @@ const getLiverRiskLevel = (score) => {
     return 'High';
 };
 
-const generateLiverRecommendations = (score, level, formData) => { // Passed formData for specific checks
+const generateLiverRecommendations = (score, level, formData) => {
     const recommendations = [];
     
     const sgotStatus = getLiverParameterStatus(formData.sgot, liverReferenceRanges.sgot);
@@ -237,7 +227,7 @@ const generateLiverRecommendations = (score, level, formData) => { // Passed for
 
 const getLiverFunctionResults = (formData) => {
     const results = {};
-    Object.entries(liverReferenceRanges).forEach(([param, range]) => { // Using liverReferenceRanges
+    Object.entries(liverReferenceRanges).forEach(([param, range]) => {
         const value = formData[param];
         const status = getLiverParameterStatus(value, range);
         const displayName = {
@@ -256,33 +246,30 @@ const getLiverFunctionResults = (formData) => {
             unit: range.unit,
             status: status.status,
             level: status.level,
-            normalRange: ${range.min}-${range.max} ${range.unit}
+            normalRange: `${range.min}-${range.max} ${range.unit}`
         };
     });
     return results;
 };
-// --- End Liver Health Calculation Logic ---
 
-
+// --- App Component ---
 function App() {
   const [assessmentData, setAssessmentData] = useState({
-    results: null, // Oxidative Stress results
+    results: null,
     formData: null,
     bmiData: null,
     calorieData: null,
-    liverHealthData: null // New state for liver health
+    liverHealthData: null
   });
 
-  
   const [currentPage, setCurrentPage] = useState('home');
 
   const handleSubmit = async (data) => {
-    // Basic validation to ensure crucial numeric fields are present
     const requiredFields = ['bmi', 'systolic', 'diastolic', 'bloodSugar', 'sleepHours', 'age', 'height', 'weight'];
     const missingFields = requiredFields.filter(field => !data[field] || isNaN(parseFloat(data[field])));
 
     if (missingFields.length > 0) {
-      alert(Please ensure all required fields are filled and valid. Missing/Invalid: ${missingFields.join(', ')});
+      alert(`Please ensure all required fields are filled and valid. Missing/Invalid: ${missingFields.join(', ')}`);
       console.error("Missing/Invalid required data fields:", missingFields);
       return;
     }
@@ -295,43 +282,39 @@ function App() {
     const stressLevel = parseInt(data.stressLevel);
 
     const bmiCategory = calculateBMICategory(bmiValue);
-    const calorieInfo = calculateCalories(data); // Assuming calculateCalories function is available
+    const calorieInfo = calculateCalories(data);
 
-    // --- Oxidative Stress Calculation ---
     const oxidativeStressScore = calculateOxidativeStressScore(data, bmiValue);
     const oxidativeStressLevel = getOxidativeStressLevel(oxidativeStressScore);
     const oxidativeStressRecommendations = generateOxidativeStressRecommendations(
       data, bmiValue, systolic, diastolic, bloodSugar, sleepHours, stressLevel, calorieInfo
     );
 
-    // --- Liver Health Calculation (using extracted logic) ---
-    const liverScore = calculateLiverHealthScore(data); // Pass full formData
+    const liverScore = calculateLiverHealthScore(data);
     const liverHealthLevel = getLiverHealthLevel(liverScore);
     const liverRiskLevel = getLiverRiskLevel(liverScore);
-    const liverRecommendations = generateLiverRecommendations(liverScore, liverHealthLevel, data); // Pass formData
-    const liverFunctionResults = getLiverFunctionResults(data); // Pass formData
+    const liverRecommendations = generateLiverRecommendations(liverScore, liverHealthLevel, data);
+    const liverFunctionResults = getLiverFunctionResults(data);
 
     const calculatedLiverHealthData = {
-        overallScore: liverScore,
-        healthLevel: liverHealthLevel,
-        riskLevel: liverRiskLevel,
-        recommendations: liverRecommendations,
-        liverFunctionResults: liverFunctionResults,
-        factors: {
-            alcohol: data.alcoholConsumption || 'Not specified',
-            diet: data.dietType?.replace('-', ' ') || 'Not specified',
-            exercise: data.physicalActivity || 'Not specified',
-            smoking: data.smoking === 'yes' ? 'Smoker' : 'Non-smoker',
-            bmi: data.bmi || 'Not specified'
-        }
+      overallScore: liverScore,
+      healthLevel: liverHealthLevel,
+      riskLevel: liverRiskLevel,
+      recommendations: liverRecommendations,
+      liverFunctionResults: liverFunctionResults,
+      factors: {
+        alcohol: data.alcoholConsumption || 'Not specified',
+        diet: data.dietType?.replace('-', ' ') || 'Not specified',
+        exercise: data.physicalActivity || 'Not specified',
+        smoking: data.smoking === 'yes' ? 'Smoker' : 'Non-smoker',
+        bmi: data.bmi || 'Not specified'
+      }
     };
-    // End Liver Health Calculation
 
-    // Send medical data to the backend (adjust endpoint and data structure as per your backend)
     try {
       await axios.post('http://localhost:3000/api/medicalData/addMedicalData', {
         bmi: bmiValue,
-        blood_pressure: ${systolic}/${diastolic},
+        blood_pressure: `${systolic}/${diastolic}`,
         blood_sugar: bloodSugar,
         age: data.age,
         gender: data.gender,
@@ -340,8 +323,6 @@ function App() {
         sleepHours: sleepHours,
         stressLevel: stressLevel,
         chronicDiseases: data.chronicDiseases,
-        
-        // Lab parameters
         urea: parseFloat(data.urea) || null,
         creatine: parseFloat(data.creatine) || null,
         sodium: parseFloat(data.sodium) || null,
@@ -353,22 +334,19 @@ function App() {
         ggt: parseFloat(data.ggt) || null,
         tProtein: parseFloat(data.tProtein) || null,
         albumin: parseFloat(data.albumin) || null,
-
-        // Lifestyle factors as an object (backend might stringify)
         lifestyle_factors: {
           smoking: data.smoking,
           alcoholConsumption: data.alcoholConsumption,
           physicalActivity: data.physicalActivity,
           dietType: data.dietType
         },
-        calorie_needs: calorieInfo.calorieTargets?.maintenance?.calories || 0, // Sending maintenance calories
+        calorie_needs: calorieInfo.calorieTargets?.maintenance?.calories || 0,
         oxidative_stress_score: oxidativeStressScore,
         liver_health_score: liverScore
       });
       console.log("Medical data sent successfully!");
     } catch (error) {
       console.error("Failed to send medical data to server:", error);
-      // alert("Failed to save data to server. Check console for details."); // Uncomment for user feedback
     }
 
     setAssessmentData({
@@ -378,13 +356,14 @@ function App() {
         bmiLevel: bmiCategory
       },
       calorieData: calorieInfo,
-      results: { // Oxidative Stress Results
+      results: {
         score: oxidativeStressScore,
         level: oxidativeStressLevel,
         recommendations: oxidativeStressRecommendations
       },
-      liverHealthData: calculatedLiverHealthData // Set liver health data
+      liverHealthData: calculatedLiverHealthData
     });
+
     setCurrentPage('results');
   };
 
@@ -398,59 +377,3 @@ function App() {
     });
     setCurrentPage('form');
   };
-
-  const handleGetStarted = () => {
-    setCurrentPage('form');
-  };
-
-  const navigateToHome = () => {
-    setCurrentPage('home');
-    setAssessmentData({
-      results: null,
-      formData: null,
-      bmiData: null,
-      calorieData: null,
-      liverHealthData: null
-    });
-  };
-
-  const navigateToAbout = () => {
-    setCurrentPage('about');
-  };
-
-  return (
-        <div className="w-screen min-h-screen flex flex-col bg-gradient-to-br from-blue-50 via-white to-indigo-50 pt-24 sm:pt-28 overflow-x-hidden">
-      {/* Header */}
-      <Header
-        onHomeClick={() => setCurrentPage("home")}
-        onAboutClick={() => setCurrentPage("about")}
-        onGetStarted={() => setCurrentPage("oxidative-stress-form")}
-      />
-
-      <main className="flex-grow w-screen px-0 sm:px-0 py-4 sm:py-6 lg:py-8 pt-20 sm:pt-24">
-        {currentPage === 'home' && <Home onGetStarted={handleGetStarted} />}
-        {currentPage === 'about' && <AboutUs />}
-        {currentPage === 'form' && (
-          <div className="bg-white/70 backdrop-blur-sm rounded-xl sm:rounded-2xl shadow-lg border border-white/20 p-4 sm:p-6 lg:p-8 w-full">
-            <OxidativeStressForm onSubmit={handleSubmit} />
-          </div>
-        )}
-        {currentPage === 'results' && assessmentData.results && (
-          <div className="w-full">
-            <ResultsPanel 
-              results={assessmentData.results} // Oxidative Stress
-              bmiData={assessmentData.bmiData}
-              calorieData={assessmentData.calorieData}
-              liverHealthData={assessmentData.liverHealthData} // Pass liver health data
-              onReset={handleReset}
-            />
-          </div>
-        )}
-      </main>
-
-      <Footer />
-    </div>
-  );
-}
-
-export default App;

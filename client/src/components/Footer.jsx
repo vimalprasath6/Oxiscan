@@ -82,7 +82,7 @@ function Footer() {
                 <div>
                   <span className="text-gray-500 text-xs uppercase tracking-wide">Email</span>
                   <p className="text-gray-300 group-hover/contact:text-blue-300 transition-colors">
-                    volvtamart@gmail.com
+                    vimalprasatharjunan@gmail.com
                   </p>
                 </div>
               </li>
@@ -91,7 +91,7 @@ function Footer() {
                 <div>
                   <span className="text-gray-500 text-xs uppercase tracking-wide">Phone</span>
                   <p className="text-gray-300 group-hover/contact:text-blue-300 transition-colors">
-                    +91 7904559675
+                    +91 8778878642
                   </p>
                 </div>
               </li>

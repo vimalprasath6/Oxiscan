@@ -1,50 +1,3 @@
-import { useState } from 'react';
-import Header from './components/Header';
-import Footer from './components/Footer';
-import OxidativeStressForm from './components/OxidativeStressForm';
-import ResultsPanel from './components/ResultsPanel';
-import Home from './components/Home';
-import AboutUs from './components/AboutUs';
-// import LiverHealthAnalyzer from './components/LiverHealthAnalyzer'; // No longer directly used as a component to render
-import axios from 'axios';
-import { calculateCalories } from '../../server/routes/calorieCalculator'; // Assuming this utility is available client-side for the purpose of this integration
-
-// --- Utility functions for calculations (extracted from App.jsx and LiverHealthAnalyzer.jsx) ---
-
-// BMI Calculation (from original App.jsx)
-const calculateBMICategory = (bmiValue) => {
-  if (bmiValue < 18.5) return { category: 'Underweight', color: 'text-blue-600' };
-  if (bmiValue < 25) return { category: 'Normal Weight', color: 'text-green-600' };
-  if (bmiValue < 30) return { category: 'Overweight', color: 'text-yellow-600' };
-  if (bmiValue < 35) return { category: 'Obesity Class I', color: 'text-red-600' };
-  if (bmiValue < 40) return { category: 'Obesity Class II', color: 'text-red-600' };
-  return { category: 'Obesity Class III', color: 'text-red-600' };
-};
-
-// Oxidative Stress Score Calculation (from original App.jsx)
-const calculateOxidativeStressScore = (data, bmiValue) => {
-  let score = 0;
-  const systolic = parseInt(data.systolic);
-  const diastolic = parseInt(data.diastolic);
-
-  if (systolic > 140 || diastolic > 90) score += 15;
-  else if (systolic > 130 || diastolic > 85) score += 10;
-  else if (systolic > 120 || diastolic > 80) score += 5;
-
-  if (bmiValue >= 30) score += 15;
-  else if (bmiValue >= 25) score += 10;
-  else if (bmiValue < 18.5) score += 5;
-
-  const bloodSugar = parseInt(data.bloodSugar);
-  if (bloodSugar > 126) score += 15;
-  else if (bloodSugar > 100) score += 10;
-  else if (bloodSugar > 90) score += 5;
-
-  if (data.smoking === 'yes') score += 20;
-
-  if (data.alcoholConsumption === 'high') score += 15;
-  else if (data.alcoholConsumption === 'moderate') score += 10;
-  else if (data.alcoholConsumption === 'occasional') score += 5;
 
   if (data.physicalActivity === 'low') score += 10;
 
@@ -84,7 +37,7 @@ const generateOxidativeStressRecommendations = (data, bmiValue, systolic, diasto
   if (stressLevel >= 4) recommendations.push("Incorporate stress management techniques such as meditation, yoga, or deep breathing exercises.");
 
   if (bmiValue > 25 && calorieData?.calorieTargets?.moderateLoss?.calories) {
-    recommendations.push(`For sustainable weight loss, consider a daily calorie target of approximately ${calorieData.calorieTargets.moderateLoss.calories} kcal.`);
+    recommendations.push(For sustainable weight loss, consider a daily calorie target of approximately ${calorieData.calorieTargets.moderateLoss.calories} kcal.);
   }
 
   // Ensure a minimum number of recommendations for low stress levels if not enough specific ones
@@ -256,7 +209,7 @@ const getLiverFunctionResults = (formData) => {
             unit: range.unit,
             status: status.status,
             level: status.level,
-            normalRange: `${range.min}-${range.max} ${range.unit}`
+            normalRange: ${range.min}-${range.max} ${range.unit}
         };
     });
     return results;
@@ -282,7 +235,7 @@ function App() {
     const missingFields = requiredFields.filter(field => !data[field] || isNaN(parseFloat(data[field])));
 
     if (missingFields.length > 0) {
-      alert(`Please ensure all required fields are filled and valid. Missing/Invalid: ${missingFields.join(', ')}`);
+      alert(Please ensure all required fields are filled and valid. Missing/Invalid: ${missingFields.join(', ')});
       console.error("Missing/Invalid required data fields:", missingFields);
       return;
     }
@@ -331,7 +284,7 @@ function App() {
     try {
       await axios.post('http://localhost:3000/api/medicalData/addMedicalData', {
         bmi: bmiValue,
-        blood_pressure: `${systolic}/${diastolic}`,
+        blood_pressure: ${systolic}/${diastolic},
         blood_sugar: bloodSugar,
         age: data.age,
         gender: data.gender,
@@ -419,7 +372,7 @@ function App() {
   };
 
   return (
-        <div className="min-h-screen flex flex-col bg-gradient-to-br from-blue-50 via-white to-indigo-50 pt-24 sm:pt-28 overflow-x-hidden">
+        <div className="w-screen min-h-screen flex flex-col bg-gradient-to-br from-blue-50 via-white to-indigo-50 pt-24 sm:pt-28 overflow-x-hidden">
       {/* Header */}
       <Header
         onHomeClick={() => setCurrentPage("home")}
@@ -427,16 +380,16 @@ function App() {
         onGetStarted={() => setCurrentPage("oxidative-stress-form")}
       />
 
-      <main className="flex-grow px-5 sm:px-6 lg:px-8 py-4 sm:py-6 lg:py-8 pt-20 sm:pt-24 w-full">
+      <main className="flex-grow w-screen px-0 sm:px-0 py-4 sm:py-6 lg:py-8 pt-20 sm:pt-24">
         {currentPage === 'home' && <Home onGetStarted={handleGetStarted} />}
         {currentPage === 'about' && <AboutUs />}
         {currentPage === 'form' && (
-          <div className="bg-white/70 backdrop-blur-sm rounded-xl sm:rounded-2xl shadow-lg border border-white/20 p-4 sm:p-6 lg:p-8 mx-auto max-w-4xl">
+          <div className="bg-white/70 backdrop-blur-sm rounded-xl sm:rounded-2xl shadow-lg border border-white/20 p-4 sm:p-6 lg:p-8 w-full">
             <OxidativeStressForm onSubmit={handleSubmit} />
           </div>
         )}
         {currentPage === 'results' && assessmentData.results && (
-          <div className="max-w-7xl mx-auto">
+          <div className="w-full">
             <ResultsPanel 
               results={assessmentData.results} // Oxidative Stress
               bmiData={assessmentData.bmiData}
